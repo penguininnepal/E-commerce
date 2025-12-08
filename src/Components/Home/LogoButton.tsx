@@ -20,7 +20,7 @@ function LogoButton() {
         <div className="text-2xl font-bold uppercase">
           <span
             className={
-              hoverSide === "left" ? "text-orange-300" : "text-blue-300"
+              hoverSide === "left" ? "text-orange-600" : "text-green-600"
             }
           >
             Farmers
@@ -28,7 +28,7 @@ function LogoButton() {
           -
           <span
             className={
-              hoverSide === "left" ? "text-blue-300" : "text-orange-300"
+              hoverSide === "left" ? "text-green-600" : "text-orange-600"
             }
           >
             Market

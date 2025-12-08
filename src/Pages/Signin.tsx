@@ -34,7 +34,7 @@ const Signin = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-[#f0f1f5]">
-      <div className="grid grid-cols-2 w-[800px] h-[600px] bg-white shadow-xl rounded-lg overflow-hidden transform hover:scale-105 duration-500 hover:shadow-2xl">
+      <div className="grid grid-cols-2 w-[800px] h-[570px] bg-white shadow-xl rounded-lg overflow-hidden transform hover:scale-105 duration-500 hover:shadow-2xl">
         {/* Left Section */}
         <form onSubmit={handleSubmit}>
         <section className="flex flex-col flex-1 p-8">
@@ -58,7 +58,7 @@ const Signin = () => {
                 <Input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  className="pr-10" 
+                  className="pr-10 border focus:border-green-500 focus:outline-none" 
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <button
@@ -70,38 +70,40 @@ const Signin = () => {
                 </button>
                 {error && <p className="text-red-500 text-sm">{error}</p>}
               </div> 
-            </div>
-
+                
+            <div className="flex justify-between">
             {/* Terms */}
             <div className="flex items-center space-x-2">
-              <Checkbox id="terms" required />
+              <Checkbox id="terms" required className="cursor-pointer" />
               <Label htmlFor="terms" className="text-sm text-gray-600">
                 Accept terms and conditions
               </Label>
             </div>
+            <div className="">
+                <button className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer hover:underline ">Forgot Password</button> </div>
+              </div>
+              </div>
 
             {/* Login Button */}
             <Button 
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold">
               Login
             </Button>
-            <div className="flex justify-end">
-            <button className="text-sm text-blue-500 hover:text-blue-600 cursor-pointer hover:underline ">Forgot Password</button> </div>
 
             {/* Divider */}
             <div className="flex items-center justify-center">
               <div className="flex-1 border-t border-gray-300"></div>
-              <span className="px-4 text-sm text-gray-500 font-medium">OR</span>
+              <span className="px-4 text-sm text-gray-400 font-medium">or continue with</span>
               <div className="flex-1 border-t border-gray-300"></div>
             </div>
 
             {/* Social Login */}
             <div className="flex flex-col space-y-2">
               <button className="w-full bg-red-500 hover:bg-red-600 text-white rounded-md py-2 font-medium">
-                Login with Google
+                 Google
               </button>
               <button className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-md py-2 font-medium">
-                Login with Facebook
+                 Facebook
               </button>
               <button 
               onClick={() => navigate('/createAccount')}
