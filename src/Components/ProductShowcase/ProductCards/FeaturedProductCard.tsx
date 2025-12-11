@@ -1,10 +1,13 @@
 // src/Components/ProductShowcase/FeaturedProductCard.tsx
 import React from "react";
-import type { Product } from "../../ProductShowcase/ForYou/types";
+import type { Product } from "./types";
 
 type ProductCardProps = Product & { onClick?: () => void };
 
 const ProductCard: React.FC<ProductCardProps> = ({ image, title, price, onClick }) => {
+
+
+  
   return (
     <div
       onClick={onClick}

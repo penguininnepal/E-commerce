@@ -39,7 +39,13 @@ export const justforyouproducts : JustforyouProduct [] = [
             price: '3500',              
             rating: '4.0'
         }, 
-        { id: 3, image : '', title: 'DemoProduct 3', price: '400', rating: '3.5'},
+        { 
+          id: 3, 
+          image : '', 
+          title: 'DemoProduct 3', 
+          price: '400', 
+          rating: '3.5'
+        },
         { id: 4, image : '', title: 'DemoProduct 4', price: '1200', rating: '4.2'},
         { id: 5, image : '', title: 'DemoProduct 5', price: '2456', rating: '4.8'},
         { id: 6, image : '', title: 'DemoProduct 6', price: '120', rating: '4.1'},

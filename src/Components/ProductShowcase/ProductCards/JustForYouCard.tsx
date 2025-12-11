@@ -1,5 +1,5 @@
 
-import type { JustforyouProduct } from '../../ProductShowcase/ForYou/Justforyoutype';
+import type { JustforyouProduct } from './Justforyoutype';
 
 type JustForYouProductProps = JustforyouProduct & {
   onClick ? : () => void;

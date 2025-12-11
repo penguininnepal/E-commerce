@@ -1,7 +1,7 @@
 import Category from '@/Components/ProductShowcase/Category/ProductCategory';
 import HeroSection from '../Components/Home/HeroSection'
-import FeaturedProducts from '../Components/ProductShowcase/ForYou/FeaturedProducts'
-import JustForYou from '@/Components/ProductShowcase/ForYou/JustForYou';
+import FeaturedProducts from '../Components/ProductShowcase/ProductCards/FeaturedProducts'
+import JustForYou from '@/Components/ProductShowcase/ProductCards/JustForYou';
 
 const Home = () => { 
   return (

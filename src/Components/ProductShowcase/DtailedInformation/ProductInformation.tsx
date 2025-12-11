@@ -83,9 +83,15 @@ const ProductInformation = () => {
             <div className="font-semibold space-y-2">
               <span className="text-sm flex gap-2 items-center">
                 Category:
-                <button className="bg-gray-100 rounded-full py-1 px-4 hover:bg-red-100 hover:text-red-700">Demo Product</button>
-                <button className="bg-gray-100 rounded-full py-1 px-4 hover:bg-red-100 hover:text-red-700">Kitchen Product</button>
-                <button className="bg-gray-100 rounded-full py-1 px-4 hover:bg-red-100 hover:text-red-700">Lifestyle</button>
+                <button 
+                value="Demo Poduct" 
+                className="bg-gray-100 rounded-full py-1 px-4 hover:bg-red-100 hover:text-red-700">Demo Product</button>
+                <button
+                value="Kitchen Product"
+                className="bg-gray-100 rounded-full py-1 px-4 hover:bg-red-100 hover:text-red-700">Kitchen Product</button>
+                <button 
+                value="Life Style"
+                className="bg-gray-100 rounded-full py-1 px-4 hover:bg-red-100 hover:text-red-700">Lifestyle</button>
               </span>
               <span className="text-sm flex gap-2 items-center">
                 Brand:
