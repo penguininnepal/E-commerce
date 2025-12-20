@@ -1,4 +1,3 @@
-// src/Components/ProductShowcase/FeaturedProductCard.tsx
 import React from "react";
 import type { Product } from "./types";
 

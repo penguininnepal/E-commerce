@@ -28,7 +28,7 @@ function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-100 relative z-50">
+      <nav className="bg-white/50 backdrop-blur-sm border-b border-gray-100 relative z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
 
           {/* 1. Mobile & Desktop: Left Section */}
@@ -101,7 +101,7 @@ function Navbar() {
 
         {/* Search Overlay (Dropdown) */}
         <div
-          className={`absolute top-full left-0 w-full bg-white border-b border-gray-100 overflow-hidden transition-all duration-300 ease-in-out ${isSearchOpen ? 'max-h-40 opacity-100 py-6' : 'max-h-0 opacity-0 py-0'
+          className={`absolute top-full left-0 w-full bg-white border-b border-gray-100 overflow-hidden transition-all duration-300 ease-in-out ${isSearchOpen ? 'max-h-40 opacity-50 py-6' : 'max-h-0 opacity-0 py-0'
             }`}
         >
           <div className="max-w-3xl mx-auto px-4 relative">

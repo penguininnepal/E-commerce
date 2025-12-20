@@ -6,7 +6,7 @@ import JustForYouCard from "@/Components/ProductShowcase/ProductCards/JustForYou
 
 const FilteredCollections = () => {
   const navigate = useNavigate();
-  // Simple category filter state (optional future expansion)
+  // Simple category filter state (optional,  future expansion will be made here)
   const [activeCategory, setActiveCategory] = useState("All");
 
   const categories = ["All", "Women", "Men", "Shoes"];
@@ -22,7 +22,7 @@ const FilteredCollections = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 font-sans">
 
-      {/* Header & Filters - */}
+      {/* Header & Filters  */}
       <div className="flex flex-col md:flex-row justify-between items-end mb-8 pb-4 border-b border-gray-100">
         <div>
           <h1 className="text-3xl font-black uppercase tracking-tight mb-2">
@@ -48,7 +48,7 @@ const FilteredCollections = () => {
         </div>
       </div>
 
-      {/* Product Grid - Matches Home Page (6 cols on XL) */}
+      {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-x-4 gap-y-10">
         {displayedProducts.map((product) => (
           <JustForYouCard

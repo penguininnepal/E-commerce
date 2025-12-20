@@ -1,32 +1,57 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LogoButton from "@/Components/Home/LogoButton";
 import { LayoutDashboard, ShoppingBag, Package, BarChart3, Settings, LogOut } from "lucide-react";
 import Orders from "./Orders";
 import Inventory from "./Inventory";
 import { useNavigate } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import AdminAnalytics from "./AdminAnalytics";
+import Setting from "./Setting";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("orders");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const currentAdminString = localStorage.getItem('currentAdmin');
+    if (!currentAdminString) {
+      navigate('/adminsignin');
+      return;
+    }
+
+    try {
+      const currentAdmin = JSON.parse(currentAdminString);
+      const adminsString = localStorage.getItem('admins');
+      const admins = adminsString ? JSON.parse(adminsString) : [];
+      
+      const isAdmin = admins.some((admin: any) => admin.email === currentAdmin.email);
+
+      if (!isAdmin) {
+        navigate('/');
+      }
+    } catch (error) {
+      navigate('/adminsignin');
+    }
+  }, [navigate]);
+
   const handleLogout = () => {
-    // Add logout logic here (clear auth tokens etc)
+    localStorage.removeItem('currentAdmin');
     navigate('/adminsignin');
   };
 
   const renderContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return <div className="p-8 text-2xl font-bold text-gray-400">Dashboard Overview (Coming Soon)</div>;
+        return <Dashboard />;
       case "orders":
         return <Orders />;
       case "inventory":
         return <Inventory />;
       case "analytics":
-        return <div className="p-8 text-2xl font-bold text-gray-400">Admin Analytics (Coming Soon)</div>;
+        return <AdminAnalytics />;
       case "settings":
-        return <div className="p-8 text-2xl font-bold text-gray-400">Settings (Coming Soon)</div>;
+        return <Setting />;
       default:
         return <Orders />;
     }
@@ -95,7 +120,7 @@ const AdminDashboard = () => {
         {/* Mobile Header */}
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 md:hidden">
              <LogoButton variant="dark" />
-             {/* Mobile menu button could go here */}
+             {/* Mobile menu button will be place here later on */}
         </header>
 
         {/* Content Container */}
@@ -108,9 +133,11 @@ const AdminDashboard = () => {
                     </h1>
                      <p className="text-gray-500 text-sm">Manage your store efficiently.</p>
                 </div>
-                <div className="hidden sm:block">
-                    <span className="text-xs font-bold bg-green-100 text-green-800 px-3 py-1 rounded-full uppercase tracking-widest">
-                        Online Status: Active
+
+                <div className="hidden sm:block text-xs font-bold uppercase tracking-widest">
+                    Online Status:
+                    <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full">
+                        Active
                     </span>
                 </div>
              </div>

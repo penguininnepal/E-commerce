@@ -7,13 +7,13 @@ const FeaturedProducts = () => {
   return (
     <section className="py-10 bg-white">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Minimal Centered Header */}
+        {/* Centered Header */}
         <div className="text-center mb-8">
           <h2 className="text-2xl font-black uppercase tracking-widest">Our Icons</h2>
           <div className="w-12 h-1 bg-black mx-auto mt-4"></div>
         </div>
 
-        {/* 3-Column Grid */}
+        {/* 3 Products Cards Placed Here */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {products.filter(p => p.tags?.includes('icon')).slice(0, 3).map((product) => (
             <div key={product.id} onClick={() => navigate(`/productinformation/${product.id}`)} className="group cursor-pointer">

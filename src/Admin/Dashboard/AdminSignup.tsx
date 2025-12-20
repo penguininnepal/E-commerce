@@ -1,75 +1,73 @@
-import { useState } from "react";
-import Select from "react-select";
-import { ProvienceOptions } from "../Data/LocationData";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import LogoButton from "@/Components/Home/LogoButton";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ChevronLeft, ChevronRight, Eye, EyeOff } from "lucide-react";
 
 type FormType = {
-  firstname: string;
-  lastname: string;
-  ownerEmail: string;
-  ownerPhone: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
   businessName: string;
-  businessRegNum: string;
-  productTarget: string;
-  province: string;
-  city: string;
-  password?: string;
-  confirmPassword?: string;
-  otp?: string;
+  businessRegistrationNumber: string;
+  businessCity: string;
+  businessProvince: string;
+  productSellingType: string;
+  password: string;
+  confirmPassword: string;
+  otp: string;
 };
 
 const AdminSignup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormType>({
-    firstname: "",
-    lastname: "",
-    ownerEmail: "",
-    ownerPhone: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
     businessName: "",
-    businessRegNum: "",
-    productTarget: "",
-    province: "",
-    city: "",
+    businessRegistrationNumber: "",
+    businessCity: "",
+    businessProvince: "",
+    productSellingType: "",
     password: "",
     confirmPassword: "",
-    otp: ""
+    otp: "",
   });
 
   const [errors, setErrors] = useState<Partial<FormType>>({});
-  const [step, setStep] = useState(1);
+  const [step, setStep] =useState(1);
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateStep = () => {
     const newErrors: Partial<FormType> = {};
     if (step === 1) {
-      if (!formData.firstname.trim()) newErrors.firstname = "First name is required";
-      if (!formData.lastname.trim()) newErrors.lastname = "Last name is required";
-      if (!formData.ownerEmail.trim()) newErrors.ownerEmail = "Email is required";
-      else if (!/\S+@\S+\.\S+/.test(formData.ownerEmail)) newErrors.ownerEmail = "Invalid email";
-      if (!formData.ownerPhone.trim()) newErrors.ownerPhone = "Phone number is required";
-      else if (!/\d{10}/.test(formData.ownerPhone)) newErrors.ownerPhone = "Invalid phone number";
+      if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
+      if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+      if (!formData.email.trim()) newErrors.email = "Email is required";
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email";
+      if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required";
+      else if (!/^\d{10}$/.test(formData.phoneNumber)) newErrors.phoneNumber = "Phone number must be 10 digits";
     }
     if (step === 2) {
-        if (!formData.businessName.trim()) newErrors.businessName = "Business name is required";
-        if (!formData.businessRegNum.trim()) newErrors.businessRegNum = "Business registration number is required";
-        if (!formData.productTarget.trim()) newErrors.productTarget = "Product target is required";
+      if (!formData.businessName.trim()) newErrors.businessName = "Business name is required";
+      if (!formData.businessRegistrationNumber.trim()) newErrors.businessRegistrationNumber = "Business registration number is required";
+      if (!formData.businessCity.trim()) newErrors.businessCity = "City is required";
+      if (!formData.businessProvince.trim()) newErrors.businessProvince = "Province is required";
     }
     if (step === 3) {
-        if (!formData.province.trim()) newErrors.province = "Province is required";
-        if (!formData.city.trim()) newErrors.city = "City is required";
+      if (!formData.productSellingType) newErrors.productSellingType = "Please select a product type";
     }
     if (step === 4) {
-        if (!formData.password) newErrors.password = "Password is required";
-        else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
-        if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+      if (!formData.password.trim()) newErrors.password = "Password is required";
+      else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+      if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
     }
     if (step === 5) {
-         if (!formData.otp || !formData.otp.trim()) newErrors.otp = "OTP is required";
-         // Mock validation: accept any 6 digit
-         else if (!/\d{6}/.test(formData.otp)) newErrors.otp = "Invalid OTP (Must be 6 digits)";
+      if (!formData.otp.trim()) newErrors.otp = "OTP is required";
+      else if (!/^\d{6}$/.test(formData.otp)) newErrors.otp = "OTP must be 6 digits";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -78,15 +76,24 @@ const AdminSignup = () => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSelectChange = (id: keyof FormType, value: string) => {
-    setFormData({ ...formData, [id]: value });
-  };
-
   const handleNext = () => {
     if (validateStep()) {
       if (step === 5) {
-        // Final submission logic here
-        console.log("Form Submitted", formData);
+        // Save to LocalStorage
+        const existingAdmins = JSON.parse(localStorage.getItem('admins') || '[]');
+        const newAdmin = {
+          email: formData.email,
+          id: Date.now().toString(),
+          // Note: Storing password in localStorage is not secure. This is for mock-up purposes.
+          password: formData.password, 
+        };
+        existingAdmins.push(newAdmin);
+        localStorage.setItem('admins', JSON.stringify(existingAdmins));
+
+        // Set current admin session
+        localStorage.setItem('currentAdmin', JSON.stringify({ email: newAdmin.email, id: newAdmin.id }));
+
+        // Navigate to Admin Panel
         navigate('/admin/dashboard');
       } else {
         setStep((prev) => prev + 1);
@@ -96,124 +103,103 @@ const AdminSignup = () => {
 
   const handleBack = () => setStep((prev) => prev - 1);
 
-  const productTargetOptions = [
-    { value: "mens-clothes", label: "Men's Clothes" },
-    { value: "womens-clothes", label: "Women's Clothes" },
-    { value: "shoes", label: "Shoes" },
-    { value: "brand-specific", label: "Clothes By Brand Specific" },
-  ];
-
   const renderStepContent = () => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
+          <div className="space-y-4 animate-in fade-in slide-in-from-right duration-500">
             <div className="space-y-2">
-                <label htmlFor="firstname" className="block text-sm font-bold uppercase tracking-widest text-black">First Name</label>
-                <input type="text" id="firstname" value={formData.firstname} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="First Name" />
-                {errors.firstname && <p className="text-red-500 text-xs mt-1">{errors.firstname}</p>}
+              <label htmlFor="firstName" className="block text-sm font-bold uppercase tracking-widest text-black">First Name</label>
+              <input type="text" id="firstName" value={formData.firstName} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="First Name" />
+              {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
             </div>
             <div className="space-y-2">
-                <label htmlFor="lastname" className="block text-sm font-bold uppercase tracking-widest text-black">Last Name</label>
-                <input type="text" id="lastname" value={formData.lastname} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Last Name" />
-                {errors.lastname && <p className="text-red-500 text-xs mt-1">{errors.lastname}</p>}
+              <label htmlFor="lastName" className="block text-sm font-bold uppercase tracking-widest text-black">Last Name</label>
+              <input type="text" id="lastName" value={formData.lastName} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Last Name" />
+              {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
             </div>
             <div className="space-y-2">
-              <label htmlFor="ownerEmail" className="block text-sm font-bold uppercase tracking-widest text-black">Email Address</label>
-              <input type="email" id="ownerEmail" value={formData.ownerEmail} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="owner@example.com" />
-              {errors.ownerEmail && <p className="text-red-500 text-xs mt-1">{errors.ownerEmail}</p>}
+              <label htmlFor="email" className="block text-sm font-bold uppercase tracking-widest text-black">Email Address</label>
+              <input type="email" id="email" value={formData.email} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Email Address" />
+              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
             </div>
             <div className="space-y-2">
-              <label htmlFor="ownerPhone" className="block text-sm font-bold uppercase tracking-widest text-black">Phone Number</label>
-              <input type="tel" id="ownerPhone" value={formData.ownerPhone} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="+977-98********" />
-              {errors.ownerPhone && <p className="text-red-500 text-xs mt-1">{errors.ownerPhone}</p>}
+              <label htmlFor="phoneNumber" className="block text-sm font-bold uppercase tracking-widest text-black">Phone Number</label>
+              <input type="tel" id="phoneNumber" value={formData.phoneNumber} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="10-digit number" />
+              {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>}
             </div>
           </div>
         );
       case 2:
         return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
-              <div className="space-y-2">
-                <label htmlFor="businessName" className="block text-sm font-bold uppercase tracking-widest text-black">Business Name</label>
-                <input type="text" id="businessName" value={formData.businessName} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="e.g., Luga Mandu Inc." />
-                {errors.businessName && <p className="text-red-500 text-xs mt-1">{errors.businessName}</p>}
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="businessRegNum" className="block text-sm font-bold uppercase tracking-widest text-black">Business Registration No.</label>
-                <input type="text" id="businessRegNum" value={formData.businessRegNum} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="123-456-789" />
-                {errors.businessRegNum && <p className="text-red-500 text-xs mt-1">{errors.businessRegNum}</p>}
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="productTarget" className="block text-sm font-bold uppercase tracking-widest text-black">Main Product Category</label>
-                <Select
-                  id="productTarget"
-                  options={productTargetOptions}
-                  onChange={(option) => handleSelectChange('productTarget', option?.value || '')}
-                  placeholder="Select..."
-                  styles={{
-                    control: (base) => ({ ...base, border: 0, boxShadow: 'none', borderBottom: '1px solid #d1d5db', borderRadius: 0 }),
-                    input: (base) => ({...base, 'input:focus': {boxShadow: 'none'}}),
-                  }}
-                  className="w-full text-lg focus:outline-none focus:border-black transition-colors bg-transparent"
-                />
-                {errors.productTarget && <p className="text-red-500 text-xs mt-1">{errors.productTarget}</p>}
-              </div>
+          <div className="space-y-4 animate-in fade-in slide-in-from-right duration-500">
+            <div className="space-y-2">
+              <label htmlFor="businessName" className="block text-sm font-bold uppercase tracking-widest text-black">Business Name</label>
+              <input type="text" id="businessName" value={formData.businessName} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Your Business Name" />
+              {errors.businessName && <p className="text-red-500 text-xs mt-1">{errors.businessName}</p>}
             </div>
-          );
+            <div className="space-y-2">
+              <label htmlFor="businessRegistrationNumber" className="block text-sm font-bold uppercase tracking-widest text-black">Business Reg. Number</label>
+              <input type="text" id="businessRegistrationNumber" value={formData.businessRegistrationNumber} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Registration Number" />
+              {errors.businessRegistrationNumber && <p className="text-red-500 text-xs mt-1">{errors.businessRegistrationNumber}</p>}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                    <label htmlFor="businessCity" className="block text-sm font-bold uppercase tracking-widest text-black">City</label>
+                    <input type="text" id="businessCity" value={formData.businessCity} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="e.g., Kathmandu" />
+                    {errors.businessCity && <p className="text-red-500 text-xs mt-1">{errors.businessCity}</p>}
+                </div>
+                <div className="space-y-2">
+                     <label htmlFor="businessProvince" className="block text-sm font-bold uppercase tracking-widest text-black">Province</label>
+                    <input type="text" id="businessProvince" value={formData.businessProvince} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="e.g., Bagmati" />
+                    {errors.businessProvince && <p className="text-red-500 text-xs mt-1">{errors.businessProvince}</p>}
+                </div>
+            </div>
+          </div>
+        );
       case 3:
         return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
-                <div className="space-y-2">
-                    <label htmlFor="province" className="block text-sm font-bold uppercase tracking-widest text-black">Province</label>
-                     <Select
-                      id="province"
-                      options={ProvienceOptions}
-                      onChange={(option) => handleSelectChange('province', option?.value || '')}
-                      placeholder="Select Province"
-                      styles={{
-                        control: (base) => ({ ...base, border: 0, boxShadow: 'none', borderBottom: '1px solid #d1d5db', borderRadius: 0 }),
-                        input: (base) => ({...base, 'input:focus': {boxShadow: 'none'}}),
-                      }}
-                      className="w-full text-lg focus:outline-none focus:border-black transition-colors bg-transparent"
-                    />
-                    {errors.province && <p className="text-red-500 text-xs mt-1">{errors.province}</p>}
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="city" className="block text-sm font-bold uppercase tracking-widest text-black">City</label>
-                    <input type="text" id="city" value={formData.city} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Enter City" />
-                    {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
-                </div>
+          <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
+            <div className="space-y-2">
+              <label htmlFor="productSellingType" className="block text-sm font-bold uppercase tracking-widest text-black">Product Selling Type</label>
+              <select id="productSellingType" value={formData.productSellingType} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent">
+                <option value="">Select a category</option>
+                <option value="men">Men's Clothes</option>
+                <option value="women">Women's Clothes</option>
+                <option value="shoes">Shoes</option>
+                <option value="brand-specific">Brand Specific (All Kinds)</option>
+              </select>
+              {errors.productSellingType && <p className="text-red-500 text-xs mt-1">{errors.productSellingType}</p>}
             </div>
+          </div>
         );
       case 4:
         return (
+          <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
+            <div className="space-y-2 relative">
+              <label htmlFor="password" className="block text-sm font-bold uppercase tracking-widest text-black">Password</label>
+              <input type={showPassword ? "text" : "password"} id="password" value={formData.password} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Min. 6 characters" />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-400 hover:text-black cursor-pointer">
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+              {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-bold uppercase tracking-widest text-black">Confirm Password</label>
+              <input type="password" id="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Re-enter password" />
+              {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+            </div>
+          </div>
+        );
+    case 5:
+        return (
             <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500">
                 <div className="space-y-2">
-                    <label htmlFor="password" className="block text-sm font-bold uppercase tracking-widest text-black">Create Password</label>
-                    <input type="password" id="password" value={formData.password} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="••••••••" />
-                    {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="confirmPassword" className="block text-sm font-bold uppercase tracking-widest text-black">Confirm Password</label>
-                    <input type="password" id="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="••••••••" />
-                    {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
-                </div>
-            </div>
-        );
-      case 5:
-        return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right duration-500 mb-8">
-                <div className="text-center mb-6">
-                    <p className="text-gray-600">We've sent a 6-digit verification code to your email.</p>
-                </div>
-                <div className="space-y-2">
-                    <label htmlFor="otp" className="block text-sm font-bold uppercase tracking-widest text-black">Enter OTP</label>
-                    <input type="text" id="otp" value={formData.otp} onChange={handleChange} maxLength={6} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300 text-center tracking-widest font-mono" placeholder="000000" />
+                    <label htmlFor="otp" className="block text-sm font-bold uppercase tracking-widest text-black">OTP Verification</label>
+                    <input type="text" id="otp" value={formData.otp} onChange={handleChange} className="w-full border-b border-gray-300 py-3 text-lg focus:outline-none focus:border-black transition-colors bg-transparent placeholder-gray-300" placeholder="Enter 6-digit OTP" />
                     {errors.otp && <p className="text-red-500 text-xs mt-1">{errors.otp}</p>}
                 </div>
-                 <div className="text-center mt-4">
-                     <button className="text-xs text-gray-500 hover:text-black underline">Resend Code</button>
-                 </div>
+                <p className="text-xs text-gray-500">An OTP has been sent to your email and phone number.</p>
             </div>
         );
       default:
@@ -223,29 +209,27 @@ const AdminSignup = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row min-h-[550px]">
-        {/* LEFT SECTION: Info & Steps */}
+      <div className="w-full max-w-6xl flex flex-col md:flex-row min-h-[500px]">
         <div className="md:w-1/2 p-12 flex flex-col justify-between relative">
           <div>
             <div className="mb-8">
               <LogoButton variant="dark" />
             </div>
-            <h1 className="text-4xl font-black uppercase tracking-tighter mb-6 leading-none text-black whitespace-pre-wrap">
-              {step === 1 && 'Become a\nSeller'}
-              {step === 2 && 'Tell us about\nyour Business'}
-              {step === 3 && 'Business\nLocation'}
-              {step === 4 && 'Secure\nYour Account'}
-              {step === 5 && 'Verify\nIdentity'}
+            <h1 className="text-4xl font-black uppercase tracking-tighter mb-6 leading-none text-black">
+              {step === 1 && 'Admin Personal Info'}
+              {step === 2 && 'Admin Business Info'}
+              {step === 3 && 'Selling Category'}
+              {step === 4 && 'Secure Your Account'}
+              {step === 5 && 'Verify Your Identity'}
             </h1>
             <p className="text-gray-500 font-light text-lg">
-              {step === 1 && 'Start your journey with LugaNepal.'}
-              {step === 2 && 'Describe your business.'}
-              {step === 3 && 'Where is your business located?'}
+              {step === 1 && 'Provide your personal details.'}
+              {step === 2 && 'Tell us about your business.'}
+              {step === 3 && 'What will you be selling?'}
               {step === 4 && 'Create a strong password.'}
-              {step === 5 && 'Enter the code sent to your email.'}
+              {step === 5 && 'Enter the OTP to complete registration.'}
             </p>
           </div>
-          {/* Step Indicators */}
           <div className="space-y-4">
             <div className="text-xs font-bold uppercase tracking-widest text-black">
               Step {step} of 5
@@ -257,25 +241,23 @@ const AdminSignup = () => {
             </div>
           </div>
         </div>
-
-        {/* RIGHT SECTION: Form Fields */}
         <div className="md:w-1/2 p-12 bg-white flex flex-col justify-center">
-          <div className="flex-grow flex flex-col justify-center max-w-md mx-auto w-full">
+          <div className="flex-grow flex flex-col justify-center">
             {renderStepContent()}
           </div>
-          <div className="mt-12 flex items-center justify-between gap-4 max-w-md mx-auto w-full">
+          <div className="mt-12 flex items-center justify-between gap-4">
             {step > 1 ? (
               <button onClick={handleBack} className="flex items-center text-sm font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors">
                 <ChevronLeft size={16} className="mr-1" /> Back
               </button>
-            ) : <div></div>} {/* Spacer */}
-            <button onClick={handleNext} className="group flex items-center bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl">
-              {step === 5 ? "Finish" : "Next"} <ChevronRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+            ) : <div></div>}
+            <button onClick={handleNext} className="group flex items-center bg-black text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-gray-800 transition-all">
+              {step === 5 ? "Verify & Finish" : "Next"} <ChevronRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
-          <div className="mt-8 text-center md:text-right max-w-md mx-auto w-full">
+          <div className="mt-8 text-center md:text-right">
             <p className="text-xs text-gray-400">
-              Already a seller?{' '}
+              Already a member?{' '}
               <button onClick={() => navigate('/adminsignin')} className="font-bold text-black hover:underline uppercase">
                 Sign In
               </button>

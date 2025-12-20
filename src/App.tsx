@@ -10,7 +10,7 @@ import Cart from './Pages/Cart/Cart';
 import Collections from './Pages/Collections';
 import ScrollToTop from './ScrollToTop';
 import Footer from './Pages/Footer';
-import CreateAccountForm from './Pages/CreateAccount';
+import CreateAccount from './Pages/CreateAccount';
 import Checkout from './Pages/Cart/Checkout';
 import Checkoutinfo from './Pages/Cart/Checkoutinfo';
 import OrderSummary from './Pages/Cart/OrderSummary';
@@ -39,7 +39,7 @@ function App() {
           <Route path="/account" element={<Account />} />
           <Route path="/productinformation/:id" element={<ProductInformation />} />
           <Route path="/collections" element={<Collections />} />
-          <Route path="/createAccount" element={<CreateAccountForm />} />
+          <Route path="/createAccount" element={<CreateAccount />} />
           <Route path="/checkout/:id" element={<Checkout />} />
           <Route path="/cart/:id" element={<Cart />} />
           <Route path="/checkoutinfo/:id" element={<Checkoutinfo />} />

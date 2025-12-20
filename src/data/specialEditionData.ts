@@ -15,9 +15,9 @@ export const specialEditions = [
     },
     {
         id: 3,
-        title: "Monochrome",
-        subtitle: "Essential Basics",
-        image: "https://i.pinimg.com/1200x/ff/1f/08/ff1f082d430e72c16afb7fb674d1210d.jpg",
+        title: "Sporty Edition",
+        subtitle: "enjoy the Moment",
+        image: "https://i.pinimg.com/1200x/6e/38/fe/6e38fe377a4a39f98025cda05bf7f0bf.jpg",
         link: "/collections"
     },
     {

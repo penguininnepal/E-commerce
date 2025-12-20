@@ -14,10 +14,10 @@ const ProductInformation = () => {
     products.find((p) => p.id === Number(id)) ||
     justforyouproducts.find((p) => p.id === Number(id));
 
-  // Huba-style Responsive UI - 2 Image Limit
+  // 2 Image Placements
   const images = product ? [
     product.image,
-    // Secondary image (placeholder if duplicating product image)
+    // Secondary image (Logice for 2nd Image placement on Click is still to be made This is a Sample 2nd Image for all Product cards)
     "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800",
   ] : [];
 
@@ -42,7 +42,7 @@ const ProductInformation = () => {
   // Initialize/Fallback
   const [selectedImage, setSelectedImage] = useState(images[0]);
   const [size, setSize] = useState("");
-  // Determine available colors (mock) or use single color
+  // Determine available colors or use single color
   const productColors = (product?.color) ? [product.color] : ["Black", "Blue", "Beige", "White"];
   const [color, setColor] = useState((product?.color) || "Classic");
   const [addQuantity, setAddQuantity] = useState(1);
@@ -91,7 +91,7 @@ const ProductInformation = () => {
           {/* LEFT: Image Gallery */}
           <div className="w-full lg:w-[55%] flex flex-col gap-6">
             {/* Main Image */}
-            <div className="w-full aspect-[4/5] bg-gray-50 overflow-hidden relative group cursor-crosshair">
+            <div className="w-full aspect-4/5 bg-gray-50 overflow-hidden relative group cursor-crosshair">
               <ImageZoom src={selectedImage || product.image} alt="Selected Product" />
               {badge && (
                 <div className="absolute top-0 left-0 bg-black text-white text-[10px] font-bold px-4 py-2 uppercase tracking-widest z-10">
@@ -100,13 +100,13 @@ const ProductInformation = () => {
               )}
             </div>
 
-            {/* Minimallist Thumbnails */}
+            {/* Thumbnail */}
             <div className="flex gap-4">
               {images.map((img, idx) => (
                 <div
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`cursor-pointer w-24 aspect-[4/5] overflow-hidden transition-all duration-300 ${selectedImage === img ? 'opacity-100 grayscale-0 border-b-2 border-black' : 'opacity-50 grayscale hover:opacity-100'}`}
+                  className={`cursor-pointer w-24 aspect-4/5 overflow-hidden transition-all duration-300 ${selectedImage === img ? 'opacity-100 grayscale-0 border-b-2 border-black' : 'opacity-50 grayscale hover:opacity-100'}`}
                 >
                   <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
                 </div>
@@ -140,7 +140,7 @@ const ProductInformation = () => {
               </div>
             </div>
 
-            {/* Selectors - Ultra Minimal */}
+            {/* Selector*/}
             <div className="space-y-8 mb-10">
               {/* Size */}
               <div>
@@ -204,7 +204,7 @@ const ProductInformation = () => {
               </button>
             </div>
 
-            {/* Minimalist Information Tabs of Accordion */}
+            {/* Information Tabs of Accordion */}
             <div className="mt-12 border-t border-gray-100 pt-6">
               <div className="flex gap-8 mb-4">
                 <button onClick={() => setActiveTab('description')} className={`text-xs font-bold uppercase tracking-widest transition-colors ${activeTab === 'description' ? 'text-black' : 'text-gray-300'}`}>Description</button>

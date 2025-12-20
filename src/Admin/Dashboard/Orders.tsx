@@ -136,7 +136,7 @@ const Orders = () => {
                     </tbody>
                 </table>
             </div>
-             {/* Pagination Placeholder */}
+
              <div className="p-4 border-t border-gray-200 flex justify-end">
                 <span className="text-xs text-gray-400">Showing {sortedFilteredOrders.length} entries</span>
              </div>
